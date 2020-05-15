@@ -1,0 +1,33 @@
+---
+
+    - name: install mysql
+      yum:
+        name=mysql-server
+        state=present
+    - name: start mysql
+      service:
+        name: mysqld
+        state: started
+    - name: myssql client
+      yum:
+        name=mysql-devel
+        state=present
+    - name: mysql config file
+      copy:
+        content: |
+           [client]
+           user=root
+           password="@target"
+        dest: "/etc/.my.cnf"
+    - name: create database
+      mysql_db:
+         name: employee_db
+         state: present
+      tags: createdatabase1
+    - name: create user
+      mysql_user:
+        name: db_user
+        password: Passw0rd
+        priv: '*.*:ALL'
+        state: present
+        host: '%'
